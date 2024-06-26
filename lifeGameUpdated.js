@@ -19,28 +19,28 @@ function setCell(x, y, value) {
   activeCells[index(x, y)] = value ? 1 : 0;
 }
 
-function hasCell(x, y) {
-  return activeCells[index(x, y)] === 1;
+function getCell(x, y) {
+  return activeCells[index(x, y)];
 }
 
 function getNeighbors(x, y) {
-  left_x = x - 1;
-  if (left_x < 0) left_x += width;
-  right_x = x + 1;
-  if (right_x >= width) right_x -= width;
-  up_y = y - 1;
-  if (up_y < 0) up_y += height;
-  down_y = y + 1;
-  if (down_y >= height) down_y -= height;
+  leftX = x - 1;
+  if (leftX < 0) leftX += width;
+  rightX = x + 1;
+  if (rightX >= width) rightX -= width;
+  upY = y - 1;
+  if (upY < 0) upY += height;
+  downY = y + 1;
+  if (downY >= height) downY -= height;
   return [
-    [left_x, up_y],
-    [x, up_y],
-    [right_x, up_y],
-    [left_x, y],
-    [right_x, y],
-    [left_x, down_y],
-    [x, down_y],
-    [right_x, down_y],
+    [leftX, upY],
+    [x, upY],
+    [rightX, upY],
+    [leftX, y],
+    [rightX, y],
+    [leftX, downY],
+    [x, downY],
+    [rightX, downY],
   ];
 }
 
@@ -54,7 +54,7 @@ function setRandomFirstGeneration() {
 
 function countAliveNeighbors(x, y) {
   return getNeighbors(x, y).reduce((sum, [nx, ny]) => {
-    return sum + Number(hasCell(nx, ny));
+    return sum + getCell(nx, ny);
   }, 0);
 }
 function toggleCellStateOnClick(event) {
@@ -62,7 +62,7 @@ function toggleCellStateOnClick(event) {
   const x = Math.floor((event.clientX - rect.left) / cellSize);
   const y = Math.floor((event.clientY - rect.top) / cellSize);
 
-  setCell(x, y, !hasCell(x, y) ? 1 : 0);
+  setCell(x, y, !getCell(x, y) ? 1 : 0);
   isChanged = true;
   renderField();
 }
@@ -96,7 +96,6 @@ function initializeField() {
   canvas.addEventListener("click", toggleCellStateOnClick);
   isGridAvaliable();
 
-  setGridSettings(true);
   toggleSimulationButton();
   renderField();
 }
@@ -106,7 +105,7 @@ function renderField() {
 
   for (let x = 0; x < width; x++) {
     for (let y = 0; y < height; y++) {
-      if (hasCell(x, y)) {
+      if (getCell(x, y)) {
         ctx.fillStyle = "black";
         ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
       }
@@ -145,25 +144,17 @@ function updateField() {
             ? 1
             : 0;
         if (isSame) {
-          isSame = Boolean(newActiveCells[currentIndex]) === hasCell(x, y);
+          isSame = newActiveCells[currentIndex] === getCell(x, y);
         }
       }
     }
-    // console
     if (!isSame) {
       isChanged = true;
-      // console.log(
-      //   "activeCells",
-      //   activeCells,
-      //   " newActiveCells",
-      //   newActiveCells
-      // );
+
       activeCells = newActiveCells;
       renderField();
     } else {
       isChanged = false;
-      // console.log
-      alert("end of game");
     }
   }
 }
