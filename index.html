@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Game of Life</title>
+  </head>
+  <body>
+    <h1>Conway's Game of Life</h1>
+    <div id="controls">
+      <div>
+        <label for="width">Width:</label>
+        <input type="number" id="width" value="100" min="1" />
+        <label for="height">Height:</label>
+        <input type="number" id="height" value="100" min="1" />
+        <button id="initializeField" onclick="initializeField()">
+          Initialize Field
+        </button>
+      </div>
+      <div id="actions">
+        <label for="generationButton">Random generation</label>
+        <input
+          type="checkbox"
+          id="generationButton"
+          onclick="toggleSimulationButton()"
+        />
+        <div id="gridControls">
+          <button id="simulationButton" disabled>Start Game</button>
+          <button id="clearButton" onclick="clearGame()">Reset</button>
+        </div>
+      </div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script src="./lifeGameUpdated.js"></script>
+  </body>
+</html>

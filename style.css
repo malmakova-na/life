@@ -1,0 +1,31 @@
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+#game-container {
+  display: grid;
+  gap: 1px;
+  color: #ccc;
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+}
+#gridControls {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0px;
+  justify-content: space-between;
+  height: 52px;
+}
+.stop {
+  color: red;
+}
+#actions {
+  margin: 20px 0px;
+}
