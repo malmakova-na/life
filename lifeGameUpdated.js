@@ -66,21 +66,16 @@ function toggleCellStateOnClick(event) {
   isChanged = true;
   renderField();
 }
-function setGridSettings(value) {
+
+function setGridAccess(value) {
   document.getElementById("width").disabled = value;
   document.getElementById("height").disabled = value;
   document.getElementById("initializeField").disabled = value;
 }
-function isGridAvaliable() {
-  if (isStarted) {
-    setGridSettings(true);
-
-    document.getElementById("simulationButton").style.display = "inline-block";
-    document.getElementById("simulationButton").disabled = false;
-  } else {
-    setGridSettings(false);
-    document.getElementById("simulationButton").disabled = false;
-  }
+function updateControlState() {
+  const simulationButton = document.getElementById("simulationButton");
+  simulationButton.disabled = false;
+  setGridAccess(isStarted);
 }
 function initializeField() {
   width = parseInt(document.getElementById("width").value);
@@ -94,8 +89,8 @@ function initializeField() {
   canvas.height = height * cellSize;
 
   canvas.addEventListener("click", toggleCellStateOnClick);
-  isGridAvaliable();
 
+  updateControlState();
   toggleSimulationButton();
   renderField();
 }
@@ -132,49 +127,46 @@ function drawGrid() {
 function updateField() {
   if (isStarted) {
     const newActiveCells = new Uint8Array(new ArrayBuffer(width * height));
-    let isSame = true;
+    let isSameGrid = true;
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const aliveNeighbors = countAliveNeighbors(x, y);
         const currentIndex = index(x, y);
-        newActiveCells[currentIndex] =
+        const currentCellState =
           (activeCells[currentIndex] === 1 &&
             (aliveNeighbors === 2 || aliveNeighbors === 3)) ||
           (activeCells[currentIndex] === 0 && aliveNeighbors === 3)
             ? 1
             : 0;
-        if (isSame) {
-          isSame = newActiveCells[currentIndex] === getCell(x, y);
+        newActiveCells[currentIndex] = currentCellState;
+        if (isSameGrid) {
+          isSameGrid = newActiveCells[currentIndex] === getCell(x, y);
         }
       }
     }
-    if (!isSame) {
-      isChanged = true;
-
+    isChanged = !isSameGrid;
+    if (isChanged) {
       activeCells = newActiveCells;
       renderField();
-    } else {
-      isChanged = false;
     }
   }
 }
 const generationButton = document.getElementById("generationButton");
 
 function toggleSimulationButton() {
+  const simulationButton = document.getElementById("simulationButton");
   if (isStarted) {
-    const simulationButton = document.getElementById("simulationButton");
     simulationButton.textContent = "Stop Game";
     simulationButton.addEventListener("click", stopGame);
-    document.getElementById("simulationButton").classList.add("stop");
+    simulationButton.classList.add("stop");
     simulationButton.removeEventListener("click", startGame);
 
     generationButton.disabled = true;
-    document.getElementById("initializeField").disabled = true;
+    setGridAccess(isStarted);
   } else {
-    const simulationButton = document.getElementById("simulationButton");
     simulationButton.textContent = "Start Game";
     simulationButton.addEventListener("click", startGame);
-    document.getElementById("simulationButton").classList.remove("stop");
+    simulationButton.classList.remove("stop");
     simulationButton.removeEventListener("click", stopGame);
     generationButton.disabled = false;
   }
@@ -233,5 +225,5 @@ function clearGame() {
 
   initializeField();
   toggleSimulationButton();
-  isGridAvaliable();
+  updateControlState();
 }
