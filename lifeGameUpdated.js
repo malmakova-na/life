@@ -24,13 +24,13 @@ function getCell(x, y) {
 }
 
 function getNeighbors(x, y) {
-  leftX = x - 1;
+  let leftX = x - 1;
   if (leftX < 0) leftX += width;
-  rightX = x + 1;
+  let rightX = x + 1;
   if (rightX >= width) rightX -= width;
-  upY = y - 1;
+  let upY = y - 1;
   if (upY < 0) upY += height;
-  downY = y + 1;
+  let downY = y + 1;
   if (downY >= height) downY -= height;
   return [
     [leftX, upY],
